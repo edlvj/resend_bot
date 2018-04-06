@@ -6,11 +6,15 @@ var InviteLogSchema = new Schema({
     type: String,
     require: true
   },
-  from_group_id: {
+  user_name: {
     type: String,
     require: true
   },
-  to_group_id: {
+  from_chat_id: {
+    type: String,
+    require: true
+  },
+  to_chat_id: {
     type: String,
     require: true
   },
