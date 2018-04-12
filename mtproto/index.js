@@ -1,6 +1,11 @@
 const { MTProto } = require('telegram-mtproto')
 const { Storage } = require("mtproto-storage-fs")
-const { TelegramAppId } = require('./../config')
+const { TelegramAppId, TelegramAppHash } = require('./../config')
+
+const config = {
+  id  : TelegramAppId,
+  hash: TelegramAppHash
+}
 
 const api = {
   invokeWithLayer: 0xda9b0d0d,
@@ -17,6 +22,9 @@ const app = { storage: new Storage('./storage.json')}
 const telegram = MTProto({ 
 	api, 
 	server,  
-	app
+	app,
 })
-module.exports = telegram
+module.exports = {
+  telegram,
+  config
+}  

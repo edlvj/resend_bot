@@ -10,39 +10,19 @@ module.exports = {
 }
 
 ```
+enter /auth
 
-Run 
-```js
-
-node authorize.js
-
-```
-for getting storage.json
-
-
-
-enter /chats +
-List of current user chats
+enter /chats
+List of current user groupsa and channels
 
 enter /list
 List of publishers
 
-enter /set <from_chat_id> <to_chat_id>
+enter /add
 Set Publisher and subscriber
 
-enter /drop <publisher_id>
+enter /drop
 Destroy publisher
 
-enter /invite <chat_id> <to_chat_id>
+enter /invite
 Invite user from chats
-
-enter /invite_logs <to_group_id>
-For read log about user added to group
-
-enter /help +
-All commands
-
-Not implemented
-
-enter /owner 
-TelegramApi session owner

@@ -1,4 +1,4 @@
-const telegram = require('./init')
+const { telegram, config } = require('./index')
 
 const getChats = async () => {
   const dialogs = await telegram('messages.getDialogs', {
@@ -24,8 +24,47 @@ const addChatUser = async (chat_id, user_id) => {
   })
 }
 
+const sendCode = async (phone) => {
+  const { phone_code_hash } = await telegram('auth.sendCode', {
+    phone_number  : phone,
+    current_number: false,
+    api_id        : config.id,
+    api_hash      : config.hash
+  })
+
+  return phone_code_hash
+}
+
+const signIn = async (phone, code, phone_code_hash) => {
+  const res = await telegram('auth.signIn', {
+    phone_number: phone,
+    phone_code_hash: phone_code_hash,
+    phone_code: code
+  })
+  return res
+}
+
+const getParticipants = async (inputChannel, limit = 10) => {
+  const participants = await telegram('channels.getParticipants', {
+    channel: inputChannel,
+    filter: { _: 'channelParticipantsRecent' },
+    offset: limit,
+    limit: limit
+  })
+  return participants
+}
+
+const logOut = async () => {
+  const res = await telegram('auth.logOut')
+  return res
+}
+
 module.exports = {
   getChats,
   getFullChat,
-  addChatUser
+  addChatUser,
+  sendCode,
+  signIn,
+  logOut,
+  getParticipants
 }

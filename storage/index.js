@@ -1,7 +1,8 @@
 var mongoose = require('mongoose');
-const { DatabasebUrl } = require('./config');
-var Publisher = require('./storage/publisher');
-var InviteLog = require('./storage/invite_log');
+const { DatabasebUrl } = require('./../config');
+
+var Publisher = require('./publisher');
+var InviteLog = require('./invite_log');
 
 mongoose.connect(DatabasebUrl, function(err) {
   if (err) {

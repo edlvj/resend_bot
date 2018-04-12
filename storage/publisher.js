@@ -3,13 +3,19 @@ var Schema = mongoose.Schema;
 
 var PublisherSchema = new Schema({
   from_chat: {
-    type: String,
+    type: Number,
     require: true
+  },
+  from_chat_type: {
+    type: String,
   },
   to_chat: {
-    type: String,
+    type: Number,
     require: true
   },
+  to_chat_type: {
+    type: String
+  }
 },
 {
   timestamps: true
