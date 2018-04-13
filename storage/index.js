@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 const { DatabasebUrl } = require('./../config');
 
 var Publisher = require('./publisher');
-var InviteLog = require('./invite_log');
+var inviteLog = require('./invite_log');
 
 mongoose.connect(DatabasebUrl, function(err) {
   if (err) {
@@ -13,5 +13,5 @@ mongoose.connect(DatabasebUrl, function(err) {
 
 module.exports = {
   Publisher,
-  InviteLog
+  inviteLog
 }

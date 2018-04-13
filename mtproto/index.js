@@ -1,6 +1,6 @@
+const { TelegramAppId, TelegramAppHash } = require('./../config')
 const { MTProto } = require('telegram-mtproto')
 const { Storage } = require("mtproto-storage-fs")
-const { TelegramAppId, TelegramAppHash } = require('./../config')
 
 const config = {
   id  : TelegramAppId,

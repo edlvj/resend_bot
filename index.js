@@ -2,8 +2,11 @@ var Bot = require('telegram-api').default;
 var Message = require('telegram-api/types/Message');
 
 const { TelegramBotApiKey } = require('./config');
-const { getChats, getFullChat, addChatUser, sendCode, signIn, getParticipants } = require('./mtproto/methods');
-const { Publisher, InviteLog } = require('./storage');
+const { getChats, sendCode, signIn} = require('./mtproto/methods');
+const { isMegaGroup, isGroup, getChatId } = require('./lib/utils');
+
+const { inviteUsers, getInfoFromGroup, intiteUserToGroup } = require('./lib/resend_bot');
+const { Publisher, inviteLog } = require('./storage/index');
 
 var Question = require('telegram-api/types/Question');
 const resendFactory = require('./lib/resend_factory');
@@ -13,13 +16,12 @@ var bot = new Bot({
 });
 
 var rFactory = new resendFactory();
-
 bot.start();
 
 bot.on('update', update => {
   for(var i = 0; i < update.length; i++) {
     var message = update[i].message;
-    
+
     if(message.entities)
       return;
     
@@ -179,9 +181,10 @@ bot.command('drop', function(message) {
 });
 
 bot.command('invite', function(message) {
+  console.log('invite');
   getChats().then(chats => {
     var inviteChats = chats.filter(function(chat) {
-      return chat._ == 'chat' || chat.hasOwnProperty('megagroup');
+      return chat._ == 'chat' || isMegaGroup(chat);
     });
 
     var fromChatTitles = inviteChats.map(chat => {
@@ -210,6 +213,8 @@ bot.command('invite', function(message) {
 
       askKeyboardQuestion(choose_to_invite, message).then(answer => {
         var to_chat = chats.find(chat => chat.title === answer.text);
+        console.log(from_chat);
+        console.log(to_chat);
         inviteUsers(from_chat, to_chat)
       });  
     });
@@ -257,125 +262,3 @@ var askKeyboardQuestion = function(question, message) {
   question.to(message.chat.id).reply(message.message_id);
   return bot.send(question);
 };
-
-var getChatId = function(chat_type, chat_id) {
-  if(chat_type == "chat"){
-    return -Math.abs(chat_id);
-  } else if(chat_type == "channel") {
-    return parseInt('-100' + chat_id);   
-  }
-};
-
-var inviteUsers = function(from, to, limit = 10) {
-  getInfoFromChat(from, limit).then(function(chat) {
-
-    var users = chat.users.filter(function(user) {
-      return !user.hasOwnProperty('bot') && !user.hasOwnProperty('self');
-    });
-
-    var inviteCount = users.length < limit ? users.length : limit;
-
-    if(inviteCount <= 0)
-      return;
-
-    for(var i = 0; i <= inviteCount; i++) {
-      console.log(users[i].id)
-      
-      var inputUser = {
-        _: 'inputUser',
-        user_id: users[i].id,
-        access_hash: users[i].access_hash
-      };
-
-      var inviteLogProperties = {
-        user_id: users[i].id,
-        from_chat_id: from.id,
-        to_chat_id: to.id
-      }
-
-      InviteLog.findOne(inviteLogProperties).exec((err, inviteLog) => {
-        if(!inviteLog) {
-          //console.log(to.id);
-          addChatUser(to.id, inputUser).catch(function(err) {
-            console.log(err);
-          });
-          
-          var newInviteLog = new InviteLog(inviteLogProperties);
-          newInviteLog.save();
-        }
-      });
-    }
- });
-}
-
-var isMegaGroup = function(chat) {
-  if(chat._ == 'channel' && chat.hasOwnProperty('megagroup')) {
-    return true;
-  }
-  return false
-}
-
-var isGroup = function(chat) {
-  if(chat._ == 'chat') {
-    return true;
-  }
-  return false;
-}
-
-var isChannel = function(chat) {
-  if(chat._ == 'channel') {
-    return true;
-  }
-  return false;
-}
-
-var getInfoFromChat = function (chat, limit = 10) {
-  if(isGroup(chat)) {
-    return getFullChat(chat.id);
-  } 
-
-  if (isMegaGroup(chat)) {
-    let inputChannel = {
-       _: 'inputChannel',
-      channel_id: chat.id,
-      access_hash: chat.access_hash
-    };
-
-    return getParticipants(inputChannel, limit);
-  }
-  return false;
-};
-
-// bot.command('aloha', function(message) {
-//   getChats().then(chats => {
-//     var inviteChats = chats.filter(function(chat) {
-//       return chat._ == 'chat' || chat.hasOwnProperty('megagroup');
-//     });
-
-//     var fromChatTitles = inviteChats.map(chat => {
-//       return new Array(chat.title);
-//     });
-
-//     const choose_from_invite = new Question({
-//       text: 'Choose from invite group',
-//       answers: fromChatTitles
-//     });
-
-//     askKeyboardQuestion(choose_from_invite, message).then(answer => {
-//       var from_chat = inviteChats.find(chat => chat.title === answer.text);
-      
-//       var limit = 10;
-
-
-      
-//     });
-//   });
-// });
-
-
-
-
-
-
-//error messages;
-//change promises;

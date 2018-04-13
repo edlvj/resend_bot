@@ -54,6 +54,14 @@ const getParticipants = async (inputChannel, limit = 10) => {
   return participants
 }
 
+const inviteToChannel = async (inputChannel, users) => {
+  const res = await telegram('channels.inviteToChannel', {
+    channel: inputChannel,
+    users: users
+  })
+  return users
+}
+
 const logOut = async () => {
   const res = await telegram('auth.logOut')
   return res
@@ -66,5 +74,6 @@ module.exports = {
   sendCode,
   signIn,
   logOut,
-  getParticipants
+  getParticipants,
+  inviteToChannel
 }
