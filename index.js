@@ -6,7 +6,7 @@ const { getChats, sendCode, signIn} = require('./mtproto/methods');
 const { isMegaGroup, isGroup, getChatId } = require('./lib/utils');
 
 const { inviteUsers, getInfoFromGroup, intiteUserToGroup } = require('./lib/resend_bot');
-const { Publisher, inviteLog } = require('./storage/index');
+const { Publisher } = require('./storage/index');
 
 var Question = require('telegram-api/types/Question');
 const resendFactory = require('./lib/resend_factory');
@@ -48,27 +48,27 @@ bot.command('start', function(message) {
   bot.send(answer);
 });
 
+
 bot.command('chats', message => {
   getChats().then(chats => {
-
     var chats = chats.filter(function(chat) {
       return chat._ == 'chat' || chat.hasOwnProperty('megagroup');
     });
-
-    console.log(chats);
 
     var chatTitles = chats.map(chat => {
       return chat.title;
     }).join('\n');
 
     var answer = new Message().to(message.from.id).text(chatTitles);
+    
     bot.send(answer).catch(err => {
-      console.log(err);
+      const msg = new Message().to(message.from.id).text(err.message);
+      bot.send(msg);
     });
 
   }).catch(err => {
-    console.log(err);
-    const msg = new Message().to(message.from.id).text('Something went wrong.');
+    //console.log(err);
+    const msg = new Message().to(message.from.id).text(err.message);
     bot.send(msg);
   });
 });
@@ -118,14 +118,21 @@ bot.command('add', message => {
         newPublisher.save((err, publisher) => {
           var answer = new Message().text('Record added').to(message.from.id);
           bot.send(answer);
+        }).catch(err => {
+          console.log(err.message);
         });
-      });
-    });
+      }).catch(err => {
+          console.log(err.message);
+        });;
+    }).catch(err => {
+          console.log(err.message);
+        });;
   });  
 });
 
 bot.command('list', function(message) {
   getChats().then(chats => {
+   // console.log(chats);
     var chats = chats.filter(function(chat) {
       return chat.hasOwnProperty('creator');
     });
@@ -135,9 +142,14 @@ bot.command('list', function(message) {
         var answer = new Message().text('No publishers').to(message.from.id);
         bot.send(answer);
       } else {
+
         publishers.forEach(function(publisher) {
+          console.log(chats);
           var from_chat = chats.find(chat => chat.id === parseInt(publisher.from_chat));
           var to_chat = chats.find(chat => chat.id === parseInt(publisher.to_chat));
+
+          console.log(from_chat);
+          console.log(to_chat);
 
           var answer = new Message().text(from_chat.title + ' => ' + to_chat.title).to(message.from.id);
           bot.send(answer);
@@ -224,9 +236,7 @@ bot.command('invite', function(message) {
 bot.command('auth', message => {
   askQuestion('Enter your phone:', message).then(msg => {
     var phone = msg.text;
-
     sendCode(phone).then(resp => {
-
       askQuestion('Enter your code:', message).then(msg => {
         var code = msg.text;
 
@@ -241,13 +251,13 @@ bot.command('auth', message => {
           bot.send(msg);
         }).catch( err => {
           console.log(err);
-          const msg = new Message().to(message.chat.id).text('Wrong code. Try Again. /auth');
+          const msg = new Message().to(message.chat.id).text(err.message);
           bot.send(msg);
         });
       });
     }).catch( err => {
       console.log(err);
-      const msg = new Message().to(message.chat.id).text('Wrong phone or format.');
+      const msg = new Message().to(message.chat.id).text(err.message);
       bot.send(msg);
     });    
   });
