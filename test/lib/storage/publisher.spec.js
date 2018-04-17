@@ -16,3 +16,5 @@ describe('Publisher', function() {
     mongoose.connection.close();
     done();
   });
+});
+

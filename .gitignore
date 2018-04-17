@@ -1,5 +1,5 @@
 /node_modules
 storage.json
-config.js
+/lib/config/index.js
 package-lock.json
 /test.js

@@ -1,5 +1,5 @@
-Before use bot don't forget add him as admin to the group.
-And create config.js file with your credentials
+Before use bot don't forget add him to the group.
+And create /lib/config/index.js file with your credentials
 ```js
 
 module.exports = {
@@ -10,10 +10,14 @@ module.exports = {
 }
 
 ```
+And run
+node ./lib/resend_bot.js
+
 enter /auth
+User Auth
 
 enter /chats
-List of current user groupsa and channels
+List of current user groups and channels
 
 enter /list
 List of publishers
@@ -26,6 +30,3 @@ Destroy publisher
 
 enter /invite
 Invite user from chats
-
-
-Need change
