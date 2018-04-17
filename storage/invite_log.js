@@ -2,13 +2,10 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var InviteLogSchema = new Schema({
-  user_id: {
-    type: String,
-    require: true
-  },
-  user_name: {
-    type: String,
-    require: true
+  invited_count: {
+    type: Number,
+    require: false,
+    default: 0
   },
   from_chat_id: {
     type: String,

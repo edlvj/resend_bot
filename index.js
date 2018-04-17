@@ -228,7 +228,7 @@ bot.command('invite', function(message) {
       askKeyboardQuestion(choose_to_invite, message).then(answer => {
         var to_chat = chats.find(chat => chat.title === answer.text);
         inviteUsers(from_chat, to_chat).then(count => {
-          const msg = new Message().to(message.chat.id).text(count + ' invited');
+          const msg = new Message().to(message.chat.id).text(count + ' invitations have been sent');
           bot.send(msg);
         });
       });  
