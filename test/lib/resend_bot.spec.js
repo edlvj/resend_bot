@@ -317,10 +317,10 @@ describe('#inviteUsers(from, to)', function() {
   // it('when inviteLog present', function(done) {
   // });
 
-  afterEach(function(done) {
-   console.log(inviteLog);
-    inviteLog.remove({}, function() {
-      done();
-    });
-  });
+  // afterEach(function(done) {
+  //  console.log(inviteLog);
+  //   inviteLog.remove({}, function() {
+  //     done();
+  //   });
+  // });
 });

@@ -44,12 +44,12 @@ const signIn = async (phone, code, phone_code_hash) => {
   return res
 }
 
-const getParticipants = async (inputChannel, limit = 10) => {
+const getParticipants = async (inputChannel, options) => {
   const participants = await telegram('channels.getParticipants', {
     channel: inputChannel,
     filter: { _: 'channelParticipantsRecent' },
-    offset: limit,
-    limit: limit
+    offset: options["offset"],
+    limit: options["limit"]
   })
   return participants
 }

@@ -48,7 +48,6 @@ bot.command('start', function(message) {
   bot.send(answer);
 });
 
-
 bot.command('chats', message => {
   getChats().then(chats => {
     var chats = chats.filter(function(chat) {
@@ -78,13 +77,17 @@ bot.command('add', message => {
 
   getChats().then(chats => {
 
+    console.log(chats);
+
     var chats = chats.filter(function(chat) {
-      return chat.hasOwnProperty('creator');
+      return isGroup(chat) || isMegaGroup(chat);
     });
 
     var pubChatTitles = chats.map(chat => {
       return new Array(chat.title);
     });
+
+    console.log(pubChatTitles);
 
     const choose_publisher = new Question({
       text: 'Choose publisher group',
@@ -109,6 +112,8 @@ bot.command('add', message => {
         answers: subChatTitles
       });
 
+      console.log(subChatTitles);
+
       askKeyboardQuestion(choose_subsciber, message).then(answer => {
         var to_chat = chats.find(chat => chat.title === answer.text);
 
@@ -125,17 +130,14 @@ bot.command('add', message => {
           console.log(err.message);
         });;
     }).catch(err => {
-          console.log(err.message);
-        });;
+      console.log(err.message);
+    });;
   });  
 });
 
 bot.command('list', function(message) {
   getChats().then(chats => {
    // console.log(chats);
-    var chats = chats.filter(function(chat) {
-      return chat.hasOwnProperty('creator');
-    });
 
     Publisher.find({}).exec((err, publishers) => {
       if(publishers.length == 0) {
@@ -196,7 +198,7 @@ bot.command('invite', function(message) {
   console.log('invite');
   getChats().then(chats => {
     var inviteChats = chats.filter(function(chat) {
-      return chat._ == 'chat' || isMegaGroup(chat);
+      return isGroup(chat) || isMegaGroup(chat);
     });
 
     var fromChatTitles = inviteChats.map(chat => {
@@ -225,9 +227,10 @@ bot.command('invite', function(message) {
 
       askKeyboardQuestion(choose_to_invite, message).then(answer => {
         var to_chat = chats.find(chat => chat.title === answer.text);
-        console.log(from_chat);
-        console.log(to_chat);
-        inviteUsers(from_chat, to_chat)
+        inviteUsers(from_chat, to_chat).then(count => {
+          const msg = new Message().to(message.chat.id).text(count + ' invited');
+          bot.send(msg);
+        });
       });  
     });
   });
