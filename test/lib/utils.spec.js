@@ -1,9 +1,7 @@
-var simple = require('simple-mock');
 const expect = require('chai').expect;
 var assert = require('assert');
 
 const utils = require('./../../lib/utils');
-
 const { group, megaGroup, channel } = require('./../stubs');
 
 describe('#isMegaGroup(chat)', function() {

@@ -1,17 +1,13 @@
 var mongoose = require('mongoose');
-let { inviteLog } = require('./../../storage');
-let { DatabasebUrlTest } = require('./../../config');
+let { inviteLog } = require('./../../lib/storage');
+let { DatabasebUrlTest } = require('./../../lib/config');
 
-var simple = require('simple-mock');
 const expect = require('chai').expect;
 var assert = require('assert');
-const sinon = require('sinon');
-
-let chai = require('chai');
-let should = chai.should();
 var rewire = require('rewire');
+var methods = rewire('./../../lib/methods');
 
-var resend_bot = rewire('./../../lib/methods');
+const { chatFull, groupParticipants, statedMessage, inviteUpdate} = require('./../stubs');
 
 var getFullChat = function() {
   return Promise.resolve(chatFull);
@@ -23,7 +19,7 @@ var getParticipants = function() {
 
 describe('#getInfoFromGroup(chat, limit)', function() {
   it('return messages.chatFull', function(done) {
-    resend_bot.__set__('getFullChat', getFullChat);
+    methods.__set__('getFullChat', getFullChat);
     
     var group = {
       _: 'chat',
@@ -32,7 +28,7 @@ describe('#getInfoFromGroup(chat, limit)', function() {
       access_hash: '13695491023331794763'
     };
     
-    resend_bot.getInfoFromGroup(group).then(data => {
+    methods.getInfoFromGroup(group).then(data => {
       assert.equal(data, chatFull);
     });
 
@@ -40,7 +36,7 @@ describe('#getInfoFromGroup(chat, limit)', function() {
   });
 
   it('return channel.getParticipants', function(done) {
-   resend_bot.__set__('getParticipants', getParticipants);
+   methods.__set__('getParticipants', getParticipants);
 
     var group = {
       _: 'channel',
@@ -50,7 +46,7 @@ describe('#getInfoFromGroup(chat, limit)', function() {
       access_hash: '10248616973597418046'
     };
 
-    resend_bot.getInfoFromGroup(group).then(data => {
+    methods.getInfoFromGroup(group).then(data => {
       assert.equal(data, groupParticipants);
     });
 
@@ -65,20 +61,13 @@ describe('#getInfoFromGroup(chat, limit)', function() {
       access_hash: '16549133652192072430'
     };
     
-    resend_bot.getInfoFromGroup(group).catch(err => {
+    methods.getInfoFromGroup(group).catch(err => {
       assert.equal(err.message, 'Wrong chat type');
     });
     
     done();
   });  
 });
-
-var statedMessage = {
-  _: 'messages.statedMessage', 
-  message: {}, 
-  chats: [], 
-  users: []
-}
 
 var addChatUser = function() {
   return Promise.resolve(statedMessage); 
@@ -90,7 +79,7 @@ var inviteToChannel = function() {
 
 describe('#inviteUserToGroup(chat, user)', function() {
   it('return addChatUser', function(done) {
-    resend_bot.__set__('addChatUser', addChatUser);
+    methods.__set__('addChatUser', addChatUser);
     
     var group = {
       _: 'chat',
@@ -107,7 +96,7 @@ describe('#inviteUserToGroup(chat, user)', function() {
       last_name: 'Jew'
     };
     
-    resend_bot.inviteUserToGroup(group, user).then( data => {
+    methods.inviteUserToGroup(group, user).then( data => {
       assert.equal(data, statedMessage);
     });
     done();
@@ -115,7 +104,7 @@ describe('#inviteUserToGroup(chat, user)', function() {
 
 
   it('return inviteToChannel', function(done) {
-    resend_bot.__set__('inviteToChannel', inviteToChannel);
+    methods.__set__('inviteToChannel', inviteToChannel);
     
     var group = {
       _: 'channel',
@@ -133,7 +122,7 @@ describe('#inviteUserToGroup(chat, user)', function() {
       last_name: 'Jew'
     };
     
-    resend_bot.inviteUserToGroup(group, user).then( data => {
+    methods.inviteUserToGroup(group, user).then( data => {
       assert.equal(data, inviteUpdate);
     });
 
@@ -156,7 +145,7 @@ describe('#inviteUserToGroup(chat, user)', function() {
       last_name: 'Jew'
     };
     
-    resend_bot.inviteUserToGroup(group, user).catch(err => {
+    methods.inviteUserToGroup(group, user).catch(err => {
       assert.equal(err.message, 'Wrong chat type');
     });
 
@@ -223,41 +212,31 @@ var inviteUserToGroup = function() {
 }
 
 describe('#inviteUsers(from, to)', function() {
-  before(function(done) {
-    db = mongoose.connect(DatabasebUrlTest);
-    done();
-  });
+  it('save the user count', done => {
+    methods.__set__('getInfoFromGroup', getInfoFromGroup);
+    methods.__set__('inviteUserToGroup', inviteUserToGroup);
 
-  after(function(done) {
-    mongoose.connection.close();
-    done();
-  });
-
-  it('when inviteLog execept', done => {
-    resend_bot.__set__('getInfoFromGroup', getInfoFromGroup);
-    resend_bot.__set__('inviteUserToGroup', inviteUserToGroup);
-
-    resend_bot.inviteUsers(from_chat, to_chat).then(data => {
+    methods.inviteUsers(from_chat, to_chat).then(data => {
       assert.equal(data, 2);
     });
 
+    //must 2
+    inviteLog.findOne({from_chat_id: from_chat.id, to_chat_id: to_chat.id }).then(data => {
+      assert.equal(data.invited_count, 1);
+    }) 
+    
     done();
   }); 
+   
+  after(function(done) {
+    inviteLog.remove({}, function() {
+      done();
+    });
+  });
 
-  // it('it saves log to db', function(done) { 
+  it('must return reject promise on fullfit', function(done) {
+    
+    done();
 
-
-  // });
-
-  // it('when inviteLog present', function(done) {
-  // });
-
-
-
-  // afterEach(function(done) {
-  //  console.log(inviteLog);
-  //   inviteLog.remove({}, function() {
-  //     done();
-  //   });
-  // });
+  });
 });

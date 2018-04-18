@@ -90,11 +90,102 @@ const inviteUpdate = {
   users: []
 };
 
+let documentMessage = {
+  message_id: 1191,
+  from: [],
+  chat: [],
+  date: 1524033944,
+  document: {
+    file_id: 1
+  }
+}
+
+let photoMessage = {
+  message_id: 1191,
+  from: [],
+  chat: [],
+  date: 1524033944,
+  photo: [
+  {file_id: 1},
+  {file_id: 1},
+  {file_id: 1}] 
+}
+
+let textMessage = { 
+  message_id: 1191,
+  from: [],
+  chat: [],
+  date: 1524033944,
+  text: 'heelo'
+};  
+
+let statedMessage = {
+  _: 'messages.statedMessage', 
+  message: {}, 
+  chats: [], 
+  users: []
+};
+
+let chats = [
+  { _: 'channel',
+    flags: 9472,
+    megagroup: true,
+    democracy: true,
+    id: 1278903495,
+    access_hash: '7646293875888413565',
+    title: 'Весна 2018',
+    photo: { _: 'chatPhoto', photo_small: [Object], photo_big: [Object] },
+    date: 1523353684,
+    version: 0 },
+  { _: 'chat',
+    flags: 96,
+    deactivated: true,
+    id: 278566691,
+    title: 'Весна 2018',
+    photo: { _: 'chatPhoto', photo_small: [Object], photo_big: [Object] },
+    participants_count: 10,
+    date: 1508766626,
+    version: 11,
+    migrated_to: 
+     { _: 'inputChannel',
+       channel_id: 1278903495,
+       access_hash: '7646293875888413565' } },
+  { _: 'channel',
+    flags: 9536,
+    megagroup: true,
+    democracy: true,
+    id: 1288542867,
+    access_hash: '1899182489039619949',
+    title: 'Тендеры на разработку сайтов',
+    username: 'webtender',
+    photo: { _: 'chatPhoto', photo_small: [Object], photo_big: [Object] },
+    date: 1523523709,
+    version: 0 },
+  { _: 'chatForbidden',
+    id: 237718865,
+    title: 'Тендеры на разработку сайтов' },
+  { _: 'chat',
+    flags: 9,
+    creator: true,
+    admins_enabled: true,
+    id: 255217342,
+    title: 'test_recepient',
+    photo: { _: 'chatPhotoEmpty' },
+    participants_count: 4,
+    date: 1522670101,
+    version: 18 }
+];
+
 module.exports = {
   group,
   megaGroup,
   channel,
   chatFull,
   groupParticipants,
-  inviteUpdate
+  inviteUpdate,
+  textMessage,
+  photoMessage,
+  documentMessage,
+  statedMessage,
+  chats
 };
