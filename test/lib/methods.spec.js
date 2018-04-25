@@ -21,7 +21,7 @@ describe('#getInfoFromGroup(chat, limit)', function() {
   it('return messages.chatFull', function(done) {
     methods.__set__('getFullChat', getFullChat);
     
-    var group = {
+    let group = {
       _: 'chat',
       id: 261891709,
       title: 'test_donor',
@@ -38,7 +38,7 @@ describe('#getInfoFromGroup(chat, limit)', function() {
   it('return channel.getParticipants', function(done) {
    methods.__set__('getParticipants', getParticipants);
 
-    var group = {
+    let group = {
       _: 'channel',
       megagroup: true,
       id: 1306756382,
@@ -54,7 +54,7 @@ describe('#getInfoFromGroup(chat, limit)', function() {
   });
 
   it('return "Wrong chat type"', function(done) {
-    var group = {
+    let group = {
       _: 'channel',
       id: 1288542867,
       title: 'Spring',

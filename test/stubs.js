@@ -111,10 +111,14 @@ let photoMessage = {
   {file_id: 1}] 
 }
 
-let textMessage = { 
+let textMessage = {
   message_id: 1191,
-  from: [],
-  chat: [],
+  from: {
+    id: 1234
+  },
+  chat: {
+    id: 1234
+  },
   date: 1524033944,
   text: 'heelo'
 };  
@@ -134,15 +138,15 @@ let chats = [
     id: 1278903495,
     access_hash: '7646293875888413565',
     title: 'Весна 2018',
-    photo: { _: 'chatPhoto', photo_small: [Object], photo_big: [Object] },
+    photo: { _: 'chatPhoto', photo_small: [], photo_big: [] },
     date: 1523353684,
     version: 0 },
   { _: 'chat',
     flags: 96,
     deactivated: true,
     id: 278566691,
-    title: 'Весна 2018',
-    photo: { _: 'chatPhoto', photo_small: [Object], photo_big: [Object] },
+    title: 'лето 2018',
+    photo: { _: 'chatPhoto', photo_small: [], photo_big: [] },
     participants_count: 10,
     date: 1508766626,
     version: 11,
@@ -158,7 +162,7 @@ let chats = [
     access_hash: '1899182489039619949',
     title: 'Тендеры на разработку сайтов',
     username: 'webtender',
-    photo: { _: 'chatPhoto', photo_small: [Object], photo_big: [Object] },
+    photo: { _: 'chatPhoto', photo_small: [], photo_big: [] },
     date: 1523523709,
     version: 0 },
   { _: 'chatForbidden',
@@ -169,7 +173,7 @@ let chats = [
     creator: true,
     admins_enabled: true,
     id: 255217342,
-    title: 'test_recepient',
+    title: 'Весна 2018',
     photo: { _: 'chatPhotoEmpty' },
     participants_count: 4,
     date: 1522670101,
