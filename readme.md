@@ -11,7 +11,7 @@ module.exports = {
 
 ```
 And run
-node ./lib/resend_bot.js
+npm start
 
 enter /auth
 User Auth

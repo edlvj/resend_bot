@@ -1,6 +1,6 @@
 {
   "name": "resend_bot",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Telegram Resend Bot",
   "main": "./index.js",
   "author": "Eduard Horyach",
@@ -9,7 +9,8 @@
     "node": ">=0.12"
   },
   "scripts": {
-    "test": "mocha test/**.spec.js"
+    "test": "mocha test/lib",
+    "start": "node bin/run"
   },
   "dependencies": {
     "mongoose": "^5.0.12",

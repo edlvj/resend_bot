@@ -1,7 +1,7 @@
 const expect = require('chai').expect;
 var assert = require('assert');
 
-const resendFactory = require('./../../lib/resend_factory');
+const resendObserver = require('./../../lib/resend_factory');
 const { textMessage, photoMessage, documentMessage } = require('./../stubs');
 
 describe('#handleMessage(msg)', function() {
@@ -27,6 +27,14 @@ describe('#handleMessage(msg)', function() {
     
     assert.equal(subject.method, 'sendDocument');
     assert.equal(subject.properties.document, documentMessage.document.file_id);
+    done();
+  });
+});
+
+describe('#onUpdate(msg)', function() {
+  
+  it('return anwser', function(done) {
+
     done();
   });
 });
